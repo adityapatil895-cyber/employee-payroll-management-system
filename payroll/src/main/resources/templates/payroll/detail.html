@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Payslip</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
+</head>
+<body>
+<div class="container mt-4" style="max-width: 700px;">
+
+    <!-- Header -->
+    <div class="card shadow">
+        <div class="card-header bg-dark text-white text-center">
+            <h3> Employee Payroll Management System</h3>
+            <p class="mb-0">Monthly Payslip</p>
+        </div>
+
+        <div class="card-body">
+
+            <!-- Employee Info -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <table class="table table-borderless">
+                        <tr>
+                            <td><strong>Name:</strong></td>
+                            <td th:text="${employee.name}"></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Email:</strong></td>
+                            <td th:text="${employee.email}"></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Department:</strong></td>
+                            <td th:text="${employee.department}"></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-md-6">
+                    <table class="table table-borderless">
+                        <tr>
+                            <td><strong>Employee ID:</strong></td>
+                            <td th:text="${employee.id}"></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Overtime Hours:</strong></td>
+                            <td th:text="${employee.overtimeHours}"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Earnings vs Deductions -->
+            <div class="row">
+
+                <!-- Earnings -->
+                <div class="col-md-6">
+                    <h5 class="text-success">📈 Earnings</h5>
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>Basic Salary</td>
+                            <td th:text="${'₹' + employee.basicSalary}"></td>
+                        </tr>
+                        <tr>
+                            <td>HRA (40%)</td>
+                            <td th:text="${'₹' + employee.hra}"></td>
+                        </tr>
+                        <tr>
+                            <td>Allowances (20%)</td>
+                            <td th:text="${'₹' + employee.allowances}"></td>
+                        </tr>
+                        <tr>
+                            <td>Overtime Pay</td>
+                            <td th:text="${'₹' + employee.overtimePay}"></td>
+                        </tr>
+                        <tr class="table-success">
+                            <td><strong>Gross Salary</strong></td>
+                            <td><strong th:text="${'₹' + employee.grossSalary}"></strong></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- Deductions -->
+                <div class="col-md-6">
+                    <h5 class="text-danger">📉 Deductions</h5>
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>Provident Fund (12%)</td>
+                            <td th:text="${'₹' + employee.pf}"></td>
+                        </tr>
+                        <tr>
+                            <td>Income Tax (10%)</td>
+                            <td th:text="${'₹' + employee.tax}"></td>
+                        </tr>
+                        <tr class="table-danger">
+                            <td><strong>Total Deductions</strong></td>
+                            <td>
+                                <strong th:text="${'₹' + (employee.pf + employee.tax)}"></strong>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Net Salary -->
+            <div class="alert alert-success text-center mt-3">
+                <h4>💵 Net Salary:
+                    <strong th:text="${'₹' + employee.netSalary}"></strong>
+                </h4>
+            </div>
+
+            <!-- Buttons -->
+            <div class="d-flex gap-2 justify-content-center mt-3">
+                <a th:href="@{/payroll}" class="btn btn-secondary">← Back</a>
+                <button onclick="window.print()" class="btn btn-primary">🖨️ Print Payslip</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+</html>
