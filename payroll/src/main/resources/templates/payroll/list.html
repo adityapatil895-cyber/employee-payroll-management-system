@@ -8,7 +8,15 @@
 <div class="container mt-4">
     <h2> Payroll Management</h2>
 
-    <a th:href="@{/admin/dashboard}" class="btn btn-outline-dark mb-3">← Back</a>
+    <!-- Admin -->
+    <a th:if="${#authorization.expression('hasRole(''ADMIN'')')}"
+       th:href="@{/admin/dashboard}"
+       class="btn btn-outline-dark mb-3">← Back</a>
+
+    <!-- HR -->
+    <a th:if="${#authorization.expression('hasRole(''HR'')')}"
+       th:href="@{/hr/dashboard}"
+       class="btn btn-outline-dark mb-3">← Back</a>
 
     <table class="table table-bordered table-hover">
         <thead class="table-dark">

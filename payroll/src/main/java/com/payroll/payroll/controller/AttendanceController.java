@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -80,10 +81,18 @@ public class AttendanceController {
     // Filter by date
     @GetMapping("/attendance/filter")
     public String filterByDate(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
             Model model) {
+
+        // If no date selected → go back to full list
+        if (date == null) {
+            return "redirect:/attendance";
+        }
+
         model.addAttribute("attendanceList", attendanceService.getAttendanceByDate(date));
         model.addAttribute("filterDate", date);
+
         return "attendance/list";
     }
 
@@ -94,6 +103,12 @@ public class AttendanceController {
     public String employeeViewAttendance(Model model, Authentication auth) {
         User user = userRepository.findByUsername(auth.getName()).orElseThrow();
         Employee employee = user.getEmployee();
+        if (employee == null) {
+            model.addAttribute("attendanceList", Collections.emptyList());
+            model.addAttribute("employee", null);
+            model.addAttribute("errorMessage", "Your account is not linked to an employee profile yet.");
+            return "attendance/employee-view";
+        }
         model.addAttribute("attendanceList",
                 attendanceService.getAttendanceByEmployee(employee.getId()));
         model.addAttribute("employee", employee);
@@ -104,6 +119,10 @@ public class AttendanceController {
     @PostMapping("/employee/clockin")
     public String clockIn(Authentication auth, Model model) {
         User user = userRepository.findByUsername(auth.getName()).orElseThrow();
+        if (user.getEmployee() == null) {
+            model.addAttribute("message", "Your account is not linked to an employee profile yet.");
+            return "dashboard/employee";
+        }
         String message = attendanceService.clockIn(user.getEmployee().getId());
         model.addAttribute("message", message);
         model.addAttribute("employee", user.getEmployee());
@@ -114,9 +133,23 @@ public class AttendanceController {
     @PostMapping("/employee/clockout")
     public String clockOut(Authentication auth, Model model) {
         User user = userRepository.findByUsername(auth.getName()).orElseThrow();
+        if (user.getEmployee() == null) {
+            model.addAttribute("message", "Your account is not linked to an employee profile yet.");
+            return "dashboard/employee";
+        }
         String message = attendanceService.clockOut(user.getEmployee().getId());
         model.addAttribute("message", message);
         model.addAttribute("employee", user.getEmployee());
         return "dashboard/employee";
+    }
+
+    @ExceptionHandler(Exception.class)
+    public String handleError(Exception ex, Model model) {
+
+        model.addAttribute("errorMessage", "Invalid date! Please enter a valid date.");
+
+        model.addAttribute("attendanceList", attendanceService.getAllAttendance());
+
+        return "attendance/list";
     }
 }

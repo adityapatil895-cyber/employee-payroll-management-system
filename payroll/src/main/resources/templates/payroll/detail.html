@@ -6,9 +6,10 @@
 </head>
 <body>
 <div class="container mt-4" style="max-width: 700px;">
+    <div th:if="${errorMessage}" class="alert alert-warning" th:text="${errorMessage}"></div>
 
     <!-- Header -->
-    <div class="card shadow">
+    <div class="card shadow" th:if="${employee != null}">
         <div class="card-header bg-dark text-white text-center">
             <h3> Employee Payroll Management System</h3>
             <p class="mb-0">Monthly Payslip</p>
@@ -109,7 +110,26 @@
 
             <!-- Buttons -->
             <div class="d-flex gap-2 justify-content-center mt-3">
-                <a th:href="@{/payroll}" class="btn btn-secondary">← Back</a>
+                <!-- Admin -->
+                <a th:if="${#authorization.expression('hasRole(''ADMIN'')')}"
+                   th:href="@{/payroll}"
+                   class="btn btn-secondary">
+                    ← Back
+                </a>
+
+                <!-- HR -->
+                <a th:if="${#authorization.expression('hasRole(''HR'')')}"
+                   th:href="@{/payroll}"
+                   class="btn btn-secondary">
+                    ← Back
+                </a>
+
+                <!-- Employee -->
+                <a th:if="${#authorization.expression('hasRole(''EMPLOYEE'')')}"
+                   th:href="@{/employee/dashboard}"
+                   class="btn btn-secondary">
+                    ← Back
+                </a>
                 <button onclick="window.print()" class="btn btn-primary">🖨️ Print Payslip</button>
             </div>
 

@@ -20,14 +20,24 @@ public class AttendanceService {
     @Autowired
     private EmployeeRepository employeeRepository;
 
-    // HR marks attendance manually
-    public void markAttendance(Attendance attendance) {
+    // ✅ HR marks attendance manually (with duplicate check)
+    public String markAttendance(Attendance attendance) {
+
+        Optional<Attendance> existing = attendanceRepository
+                .findByEmployeeAndDate(attendance.getEmployee(), attendance.getDate());
+
+        if (existing.isPresent()) {
+            return "Attendance already exists for this date!";
+        }
+
         attendanceRepository.save(attendance);
+        return "Attendance marked successfully!";
     }
 
-    // Employee clocks in
+    // ✅ Employee clocks in
     public String clockIn(Long employeeId) {
         Employee employee = employeeRepository.findById(employeeId).orElseThrow();
+
         Optional<Attendance> existing = attendanceRepository
                 .findByEmployeeAndDate(employee, LocalDate.now());
 
@@ -40,13 +50,16 @@ public class AttendanceService {
         attendance.setDate(LocalDate.now());
         attendance.setClockIn(LocalTime.now());
         attendance.setStatus(AttendanceStatus.PRESENT);
+
         attendanceRepository.save(attendance);
+
         return "Clock In successful at " + LocalTime.now().withNano(0);
     }
 
-    // Employee clocks out
+    // ✅ Employee clocks out
     public String clockOut(Long employeeId) {
         Employee employee = employeeRepository.findById(employeeId).orElseThrow();
+
         Optional<Attendance> existing = attendanceRepository
                 .findByEmployeeAndDate(employee, LocalDate.now());
 
@@ -62,6 +75,7 @@ public class AttendanceService {
 
         attendance.setClockOut(LocalTime.now());
         attendanceRepository.save(attendance);
+
         return "Clock Out successful at " + LocalTime.now().withNano(0);
     }
 

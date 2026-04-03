@@ -6,7 +6,9 @@
 </head>
 <body>
 <div class="container mt-4">
-    <h2>🕐 My Attendance — <span th:text="${employee.name}"></span></h2>
+    <h2>🕐 My Attendance — <span th:text="${employee != null ? employee.name : 'Employee'}"></span></h2>
+
+    <div th:if="${errorMessage}" class="alert alert-warning mt-3" th:text="${errorMessage}"></div>
 
     <a th:href="@{/employee/dashboard}" class="btn btn-outline-dark mb-3">← Back to Dashboard</a>
 

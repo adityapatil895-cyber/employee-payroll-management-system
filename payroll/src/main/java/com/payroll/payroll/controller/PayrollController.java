@@ -53,6 +53,11 @@ public class PayrollController {
     @GetMapping("/employee/payslip")
     public String viewOwnPayslip(Model model, Authentication auth) {
         var user = userRepository.findByUsername(auth.getName()).orElseThrow();
+        if (user.getEmployee() == null) {
+            model.addAttribute("employee", null);
+            model.addAttribute("errorMessage", "Your account is not linked to an employee profile yet.");
+            return "payroll/detail";
+        }
         model.addAttribute("employee", user.getEmployee());
         return "payroll/detail";
     }
