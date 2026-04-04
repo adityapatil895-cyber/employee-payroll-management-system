@@ -26,4 +26,12 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
     List<Attendance> findByEmployeeOrderByDateDesc(Employee employee);
 
     boolean existsByEmployeeAndDate(Employee employee, LocalDate date);
+
+    // Monthly attendance for one employee
+    List<Attendance> findByEmployeeAndDateBetweenOrderByDateAsc(
+            Employee employee, LocalDate start, LocalDate end);
+
+    // Monthly attendance for all employees
+    List<Attendance> findByDateBetweenOrderByDateAsc(
+            LocalDate start, LocalDate end);
 }

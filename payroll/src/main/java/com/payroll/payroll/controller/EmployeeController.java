@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import com.payroll.payroll.repository.AttendanceRepository;
 
 import java.io.IOException;
 
@@ -26,6 +27,9 @@ public class EmployeeController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private AttendanceRepository attendanceRepository;
 
     @Autowired
     private PdfService pdfService;
@@ -92,7 +96,25 @@ public class EmployeeController {
 
     @GetMapping("/employees/delete/{id}")
     public String deleteEmployee(@PathVariable Long id) {
+        Employee employee = employeeRepository.findById(id).orElseThrow();
+
+        // Step 1 → Delete all attendance records
+        attendanceRepository.findByEmployee(employee)
+                .forEach(a -> attendanceRepository.delete(a));
+
+        // Step 2 → Delete linked user account
+        userRepository.findAll().stream()
+                .filter(u -> u.getEmployee() != null &&
+                        u.getEmployee().getId().equals(id))
+                .forEach(u -> {
+                    u.setEmployee(null);
+                    userRepository.save(u);
+                    userRepository.delete(u);
+                });
+
+        // Step 3 → Delete employee
         employeeRepository.deleteById(id);
+
         return "redirect:/employees";
     }
 

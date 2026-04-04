@@ -1,5 +1,7 @@
 package com.payroll.payroll.controller;
 
+import com.payroll.payroll.repository.AttendanceRepository;
+import com.payroll.payroll.repository.EmployeeRepository;
 import com.payroll.payroll.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -7,21 +9,74 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.time.LocalDate;
+
 @Controller
 public class DashboardController {
 
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    @Autowired
+    private AttendanceRepository attendanceRepository;
+
     @GetMapping("/admin/dashboard")
     public String adminDashboard(Model model, Authentication auth) {
         model.addAttribute("username", auth.getName());
+
+        // Total employees
+        long totalEmployees = employeeRepository.count();
+        model.addAttribute("totalEmployees", totalEmployees);
+
+        // Total payroll
+        double totalPayroll = employeeRepository.findAll()
+                .stream()
+                .mapToDouble(e -> e.getNetSalary())
+                .sum();
+        model.addAttribute("totalPayroll", String.format("%.2f", totalPayroll));
+
+        // Monthly attendance count
+        // Check current month first
+        long monthlyAttendance = attendanceRepository.findAll()
+                .stream()
+                .filter(a -> a.getDate() != null &&
+                        a.getDate().getMonth() == LocalDate.now().getMonth() &&
+                        a.getDate().getYear() == LocalDate.now().getYear())
+                .count();
+
+        // If no data this month → count previous month
+        if (monthlyAttendance == 0) {
+            monthlyAttendance = attendanceRepository.findAll()
+                    .stream()
+                    .filter(a -> a.getDate() != null &&
+                            a.getDate().getMonth() == LocalDate.now().minusMonths(1).getMonth() &&
+                            a.getDate().getYear() == LocalDate.now().minusMonths(1).getYear())
+                    .count();
+        }
+
+        model.addAttribute("monthlyAttendance", monthlyAttendance);
+
         return "dashboard/admin";
     }
 
     @GetMapping("/hr/dashboard")
     public String hrDashboard(Model model, Authentication auth) {
         model.addAttribute("username", auth.getName());
+
+        // Present today count
+        long presentToday = attendanceRepository.findAll()
+                .stream()
+                .filter(a -> a.getDate() != null &&
+                        a.getDate().equals(LocalDate.now()))
+                .count();
+        model.addAttribute("presentToday", presentToday);
+
+        // Employee list
+        model.addAttribute("employees", employeeRepository.findAll());
+
         return "dashboard/hr";
     }
 

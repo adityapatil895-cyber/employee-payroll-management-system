@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Monthly Attendance</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
+</head>
+<body>
+<div class="container mt-4">
+    <h2>📊 Monthly Attendance Report</h2>
+    <h5 class="text-muted">Month: <span th:text="${currentMonth}"></span></h5>
+
+    <a th:href="@{/attendance}" class="btn btn-outline-dark mb-3">← Back</a>
+    <a th:href="@{/attendance/mark}" class="btn btn-success mb-3 ms-2">+ Mark Attendance</a>
+
+    <table class="table table-bordered table-hover">
+        <thead class="table-dark">
+        <tr>
+            <th>#</th>
+            <th>Employee</th>
+            <th>Date</th>
+            <th>Clock In</th>
+            <th>Clock Out</th>
+            <th>Status</th>
+            <th>Remarks</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="a, stat : ${attendanceList}">
+            <td th:text="${stat.index + 1}"></td>
+            <td th:text="${a.employee.name}"></td>
+            <td th:text="${a.date}"></td>
+            <td th:text="${a.clockIn != null ? a.clockIn : '-'}"></td>
+            <td th:text="${a.clockOut != null ? a.clockOut : '-'}"></td>
+            <td>
+          <span th:if="${a.status != null}"
+                th:text="${a.status}"
+                th:class="${a.status.name() == 'PRESENT'} ? 'badge bg-success' :
+                          (${a.status.name() == 'ABSENT'} ? 'badge bg-danger' :
+                          (${a.status.name() == 'HALF_DAY'} ? 'badge bg-warning' :
+                          'badge bg-info'))">
+          </span>
+                <span th:if="${a.status == null}" class="badge bg-secondary">-</span>
+            </td>
+            <td th:text="${a.remarks != null ? a.remarks : '-'}"></td>
+            <td>
+                <a th:href="@{/attendance/edit/{id}(id=${a.id})}"
+                   class="btn btn-sm btn-warning">Edit</a>
+            </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(attendanceList)}">
+            <td colspan="8" class="text-center text-muted">No records this month.</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

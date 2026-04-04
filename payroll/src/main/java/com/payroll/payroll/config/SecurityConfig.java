@@ -42,27 +42,36 @@ public class SecurityConfig {
                         // Public
                         .requestMatchers("/login", "/css/**", "/js/**").permitAll()
 
-                        // Role-based access
+                        // Admin dashboard only
                         .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers("/hr/**").hasAuthority("ROLE_HR")
+
+                        // HR dashboard only
+                        .requestMatchers("/hr/dashboard").hasAuthority("ROLE_HR")
+
+                        // HR attendance routes → both Admin and HR
+                        .requestMatchers("/hr/attendance/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_HR")
+
+                        // Employee only
                         .requestMatchers("/employee/**").hasAuthority("ROLE_EMPLOYEE")
 
-                        // ✅ Attendance control (IMPORTANT)
-                        .requestMatchers("/attendance/**").hasAnyAuthority("ROLE_HR", "ROLE_ADMIN")
+                        // Employees management → Admin only
+                        .requestMatchers("/employees/**").hasAuthority("ROLE_ADMIN")
 
-                        // ✅ Employee specific attendance view
-                        .requestMatchers("/employee/attendance").hasAuthority("ROLE_EMPLOYEE")
+                        // Payroll → Admin and HR
+                        .requestMatchers("/payroll/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_HR")
 
+                        // Attendance → Admin and HR
+                        .requestMatchers("/attendance/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_HR")
+
+                        // Everything else → just be logged in
                         .anyRequest().authenticated()
                 )
-
                 .formLogin(form -> form
                         .loginPage("/login")
                         .successHandler(customSuccessHandler())
                         .failureUrl("/login?error=true")
                         .permitAll()
                 )
-
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/login?logout=true")
@@ -77,7 +86,6 @@ public class SecurityConfig {
         return (request, response, authentication) -> {
             String role = authentication.getAuthorities()
                     .iterator().next().getAuthority();
-
             if (role.equals("ROLE_ADMIN")) {
                 response.sendRedirect("/admin/dashboard");
             } else if (role.equals("ROLE_HR")) {
