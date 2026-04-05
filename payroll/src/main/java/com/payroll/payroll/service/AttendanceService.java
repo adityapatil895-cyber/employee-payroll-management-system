@@ -22,11 +22,20 @@ public class AttendanceService {
 
     // HR marks attendance manually
     public String markAttendance(Attendance attendance) {
+
+        if (attendance.getEmployee() == null || attendance.getStatus() == null) {
+            return "Please fill all required fields!";
+        }
+
         Optional<Attendance> existing = attendanceRepository
                 .findByEmployeeAndDate(attendance.getEmployee(), attendance.getDate());
+
         if (existing.isPresent()) {
             return "Attendance already exists for this date!";
         }
+
+        attendance.setDate(LocalDate.now());
+
         attendanceRepository.save(attendance);
         return "Attendance marked successfully!";
     }
@@ -107,46 +116,24 @@ public class AttendanceService {
         return employeeRepository.findAll();
     }
 
-    // Get monthly attendance for ONE employee
+    // ✅ FIXED: Get last 2 months attendance for ONE employee
     public List<Attendance> getMonthlyAttendance(Long employeeId) {
         Employee employee = employeeRepository.findById(employeeId).orElseThrow();
 
-        // Try current month first
-        LocalDate start = LocalDate.now().withDayOfMonth(1);
+        LocalDate start = LocalDate.now().minusMonths(1).withDayOfMonth(1);
         LocalDate end = LocalDate.now();
-        List<Attendance> list = attendanceRepository
+
+        return attendanceRepository
                 .findByEmployeeAndDateBetweenOrderByDateAsc(employee, start, end);
-
-        // If no data this month → show previous month
-        if (list.isEmpty()) {
-            LocalDate prevStart = LocalDate.now().minusMonths(1).withDayOfMonth(1);
-            LocalDate prevEnd = LocalDate.now().minusMonths(1)
-                    .withDayOfMonth(LocalDate.now().minusMonths(1).lengthOfMonth());
-            list = attendanceRepository
-                    .findByEmployeeAndDateBetweenOrderByDateAsc(employee, prevStart, prevEnd);
-        }
-
-        return list;
     }
 
-    // Get monthly attendance for ALL employees (HR)
+    // ✅ FIXED: Get last 2 months attendance for ALL employees (HR)
     public List<Attendance> getAllMonthlyAttendance() {
 
-        // Try current month first
-        LocalDate start = LocalDate.now().withDayOfMonth(1);
+        LocalDate start = LocalDate.now().minusMonths(1).withDayOfMonth(1);
         LocalDate end = LocalDate.now();
-        List<Attendance> list = attendanceRepository
+
+        return attendanceRepository
                 .findByDateBetweenOrderByDateAsc(start, end);
-
-        // If no data this month → show previous month
-        if (list.isEmpty()) {
-            LocalDate prevStart = LocalDate.now().minusMonths(1).withDayOfMonth(1);
-            LocalDate prevEnd = LocalDate.now().minusMonths(1)
-                    .withDayOfMonth(LocalDate.now().minusMonths(1).lengthOfMonth());
-            list = attendanceRepository
-                    .findByDateBetweenOrderByDateAsc(prevStart, prevEnd);
-        }
-
-        return list;
     }
 }

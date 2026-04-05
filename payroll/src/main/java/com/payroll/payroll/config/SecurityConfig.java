@@ -42,28 +42,31 @@ public class SecurityConfig {
                         // Public
                         .requestMatchers("/login", "/css/**", "/js/**").permitAll()
 
-                        // Admin dashboard only
+                        // Admin dashboard
                         .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
 
-                        // HR dashboard only
+                        // HR dashboard
                         .requestMatchers("/hr/dashboard").hasAuthority("ROLE_HR")
 
-                        // HR attendance routes → both Admin and HR
+                        // HR attendance
                         .requestMatchers("/hr/attendance/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_HR")
 
-                        // Employee only
+                        // Employee routes
                         .requestMatchers("/employee/**").hasAuthority("ROLE_EMPLOYEE")
 
-                        // Employees management → Admin only
+                        // ✅ FIX: allow ALL roles for PDF (we will restrict in controller)
+                        .requestMatchers("/employees/*/payslip")
+                        .hasAnyAuthority("ROLE_ADMIN", "ROLE_HR", "ROLE_EMPLOYEE")
+
+                        // Employees management
                         .requestMatchers("/employees/**").hasAuthority("ROLE_ADMIN")
 
-                        // Payroll → Admin and HR
+                        // Payroll
                         .requestMatchers("/payroll/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_HR")
 
-                        // Attendance → Admin and HR
+                        // Attendance
                         .requestMatchers("/attendance/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_HR")
 
-                        // Everything else → just be logged in
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -86,6 +89,7 @@ public class SecurityConfig {
         return (request, response, authentication) -> {
             String role = authentication.getAuthorities()
                     .iterator().next().getAuthority();
+
             if (role.equals("ROLE_ADMIN")) {
                 response.sendRedirect("/admin/dashboard");
             } else if (role.equals("ROLE_HR")) {

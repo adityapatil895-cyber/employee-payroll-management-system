@@ -1,58 +1,143 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>Admin Dashboard</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
+  <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,300,400,600,700,800,900" rel="stylesheet">
+  <link href="/css/sb-admin-2.min.css" rel="stylesheet">
 </head>
-<body class="bg-light">
-<div class="container mt-4">
-  <h3> Admin Dashboard — Welcome, <span th:text="${username}"></span></h3>
-  <hr/>
+<body id="page-top">
+<div id="wrapper">
 
-  <!-- Count Cards -->
-  <div class="row mt-3 g-3">
+  <!-- Sidebar -->
+  <div th:replace="fragments/navbar :: sidebar"></div>
 
-    <div class="col-md-4">
-      <div class="card text-white bg-primary p-3 text-center shadow">
-        <h5>👥 Total Employees</h5>
-        <h2 th:text="${totalEmployees}">0</h2>
+  <!-- Content Wrapper -->
+  <div id="content-wrapper" class="d-flex flex-column">
+    <div id="content">
+
+      <!-- Topbar -->
+      <div th:replace="fragments/navbar :: topbar"></div>
+
+      <!-- Main Content -->
+      <div class="container-fluid">
+
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+          <h1 class="h3 mb-0 text-gray-800">👑 Admin Dashboard</h1>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="row">
+
+          <!-- Total Employees -->
+          <div class="col-xl-4 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                      Total Employees
+                    </div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800"
+                         th:text="${totalEmployees}">0</div>
+                  </div>
+                  <div class="col-auto">
+                    <i class="fas fa-users fa-2x text-gray-300"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Total Payroll -->
+          <div class="col-xl-4 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                      Total Payroll
+                    </div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                      ₹<span th:text="${totalPayroll}">0</span>
+                    </div>
+                  </div>
+                  <div class="col-auto">
+                    <i class="fas fa-rupee-sign fa-2x text-gray-300"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Monthly Attendance -->
+          <div class="col-xl-4 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                      Monthly Attendance
+                    </div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800"
+                         th:text="${monthlyAttendance}">0</div>
+                  </div>
+                  <div class="col-auto">
+                    <i class="fas fa-calendar-check fa-2x text-gray-300"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Quick Action Buttons -->
+        <div class="row">
+          <div class="col-12">
+            <div class="card shadow mb-4">
+              <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Quick Actions</h6>
+              </div>
+              <div class="card-body">
+                <div class="row g-3">
+                  <div class="col-md-3">
+                    <a href="/employees" class="btn btn-primary btn-block p-3">
+                      <i class="fas fa-users mr-2"></i>Manage Employees
+                    </a>
+                  </div>
+                  <div class="col-md-3">
+                    <a href="/attendance" class="btn btn-success btn-block p-3">
+                      <i class="fas fa-calendar-check mr-2"></i>Attendance
+                    </a>
+                  </div>
+                  <div class="col-md-3">
+                    <a href="/payroll" class="btn btn-warning btn-block p-3">
+                      <i class="fas fa-file-invoice-dollar mr-2"></i>Payroll
+                    </a>
+                  </div>
+                  <div class="col-md-3">
+                    <a href="/employees/add" class="btn btn-info btn-block p-3">
+                      <i class="fas fa-user-plus mr-2"></i>Add Employee
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
-
-    <div class="col-md-4">
-      <div class="card text-white bg-success p-3 text-center shadow">
-        <h5>💰 Total Payroll</h5>
-        <h2>₹<span th:text="${totalPayroll}">0</span></h2>
-      </div>
-    </div>
-
-    <div class="col-md-4">
-      <div class="card text-white bg-warning p-3 text-center shadow">
-        <h5>🗓️ Monthly Attendance</h5>
-        <h2 th:text="${monthlyAttendance}">0</h2>
-      </div>
-    </div>
-
   </div>
-
-  <!-- Action Buttons -->
-  <div class="row mt-4 g-3">
-    <div class="col-md-3">
-      <a href="/employees" class="btn btn-outline-primary w-100 p-3">👥 Manage Employees</a>
-    </div>
-    <div class="col-md-3">
-      <a href="/attendance" class="btn btn-outline-success w-100 p-3">🕐 Attendance</a>
-    </div>
-    <div class="col-md-3">
-      <a href="/payroll" class="btn btn-outline-warning w-100 p-3">💰 Payroll</a>
-    </div>
-    <div class="col-md-3">
-      <form th:action="@{/logout}" method="post">
-        <button type="submit" class="btn btn-outline-danger w-100 p-3">🚪 Logout</button>
-      </form>
-    </div>
-  </div>
-
 </div>
+
+<script src="/vendor/jquery/jquery.min.js"></script>
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+<script src="/js/sb-admin-2.min.js"></script>
 </body>
 </html>

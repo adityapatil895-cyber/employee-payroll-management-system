@@ -43,9 +43,12 @@ public class PayrollController {
 
     // View one employee payslip detail
     @GetMapping("/payroll/detail/{id}")
-    public String viewPayrollDetail(@PathVariable Long id, Model model) {
+    public String viewPayrollDetail(@PathVariable Long id, Model model, Authentication auth) {
         Employee employee = employeeRepository.findById(id).orElseThrow();
         model.addAttribute("employee", employee);
+
+        model.addAttribute("role", auth.getAuthorities().iterator().next().getAuthority()); // ✅ ADD
+
         return "payroll/detail";
     }
 
@@ -53,12 +56,18 @@ public class PayrollController {
     @GetMapping("/employee/payslip")
     public String viewOwnPayslip(Model model, Authentication auth) {
         var user = userRepository.findByUsername(auth.getName()).orElseThrow();
+
         if (user.getEmployee() == null) {
             model.addAttribute("employee", null);
             model.addAttribute("errorMessage", "Your account is not linked to an employee profile yet.");
             return "payroll/detail";
         }
+
         model.addAttribute("employee", user.getEmployee());
+
+        model.addAttribute("role", user.getRole().name()); // ✅ ADD
+
         return "payroll/detail";
     }
+
 }

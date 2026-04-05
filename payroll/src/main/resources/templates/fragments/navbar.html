@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+
+<!-- Sidebar Fragment -->
+<div th:fragment="sidebar">
+    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+        <!-- Brand -->
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
+            <div class="sidebar-brand-icon rotate-n-15">
+                <i class="fas fa-money-check-alt"></i>
+            </div>
+            <div class="sidebar-brand-text mx-3">Payroll System</div>
+        </a>
+
+        <hr class="sidebar-divider my-0">
+
+        <!-- Admin Links -->
+        <div sec:authorize="hasAuthority('ROLE_ADMIN')">
+            <li class="nav-item">
+                <a class="nav-link" href="/admin/dashboard">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <hr class="sidebar-divider">
+            <li class="nav-item">
+                <a class="nav-link" href="/employees">
+                    <i class="fas fa-fw fa-users"></i>
+                    <span>Employees</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/attendance">
+                    <i class="fas fa-fw fa-calendar-check"></i>
+                    <span>Attendance</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/payroll">
+                    <i class="fas fa-fw fa-file-invoice-dollar"></i>
+                    <span>Payroll</span>
+                </a>
+            </li>
+        </div>
+
+        <!-- HR Links -->
+        <div sec:authorize="hasAuthority('ROLE_HR')">
+            <li class="nav-item">
+                <a class="nav-link" href="/hr/dashboard">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <hr class="sidebar-divider">
+            <li class="nav-item">
+                <a class="nav-link" href="/attendance">
+                    <i class="fas fa-fw fa-calendar-check"></i>
+                    <span>Attendance</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/payroll">
+                    <i class="fas fa-fw fa-file-invoice-dollar"></i>
+                    <span>Payroll</span>
+                </a>
+            </li>
+        </div>
+
+        <!-- Employee Links -->
+        <div sec:authorize="hasAuthority('ROLE_EMPLOYEE')">
+            <li class="nav-item">
+                <a class="nav-link" href="/employee/dashboard">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <hr class="sidebar-divider">
+            <li class="nav-item">
+                <a class="nav-link" href="/employee/attendance">
+                    <i class="fas fa-fw fa-calendar-check"></i>
+                    <span>My Attendance</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/employee/payslip">
+                    <i class="fas fa-fw fa-file-invoice-dollar"></i>
+                    <span>My Payslip</span>
+                </a>
+            </li>
+        </div>
+
+        <hr class="sidebar-divider d-none d-md-block">
+
+        <!-- Logout -->
+        <li class="nav-item">
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="btn nav-link text-white">
+                    <i class="fas fa-fw fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </button>
+            </form>
+        </li>
+
+        <div class="text-center d-none d-md-inline">
+            <button class="rounded-circle border-0" id="sidebarToggle"></button>
+        </div>
+
+    </ul>
+</div>
+
+<!-- Topbar Fragment -->
+<div th:fragment="topbar">
+    <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+        <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+            <i class="fa fa-bars"></i>
+        </button>
+        <ul class="navbar-nav ml-auto">
+            <div class="topbar-divider d-none d-sm-block"></div>
+            <li class="nav-item dropdown no-arrow">
+                <a class="nav-link dropdown-toggle" href="#" id="userDropdown"
+                   role="button" data-toggle="dropdown">
+                    <span class="mr-2 d-none d-lg-inline text-gray-600 small"
+                          sec:authentication="name"></span>
+                    <img class="img-profile rounded-circle"
+                         src="/img/undraw_profile.svg" style="width:32px;height:32px;">
+                </a>
+                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in">
+                    <form th:action="@{/logout}" method="post">
+                        <button type="submit" class="dropdown-item">
+                            <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                            Logout
+                        </button>
+                    </form>
+                </div>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+</body>
+</html>

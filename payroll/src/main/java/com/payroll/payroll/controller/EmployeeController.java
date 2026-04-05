@@ -119,9 +119,24 @@ public class EmployeeController {
     }
 
     @GetMapping("/employees/{id}/payslip")
-    public void downloadPayslip(@PathVariable Long id, HttpServletResponse response) throws IOException {
+    public void downloadPayslip(@PathVariable Long id,
+                                HttpServletResponse response,
+                                org.springframework.security.core.Authentication auth) throws IOException {
+
         Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid employee Id: " + id));
+
+        // 🔒 Get logged-in user
+        var user = userRepository.findByUsername(auth.getName()).orElseThrow();
+
+        // 🔒 Restrict employee to their own payslip
+        if (user.getRole().name().equals("ROLE_EMPLOYEE")) {
+            if (user.getEmployee() == null || !user.getEmployee().getId().equals(id)) {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied");
+                return;
+            }
+        }
+
         pdfService.generatePayslip(employee, response);
     }
 }

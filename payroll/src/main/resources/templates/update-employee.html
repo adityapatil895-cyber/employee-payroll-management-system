@@ -1,57 +1,93 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Update Employee</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
+    <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,300,400,600,700,800,900" rel="stylesheet">
+    <link href="/css/sb-admin-2.min.css" rel="stylesheet">
 </head>
-<body>
+<body id="page-top">
+<div id="wrapper">
 
-<div class="container mt-5" style="max-width: 600px;">
+    <div th:replace="fragments/navbar :: sidebar"></div>
 
-    <div class="card shadow p-4">
+    <div id="content-wrapper" class="d-flex flex-column">
+        <div id="content">
 
-        <h3 class="text-center mb-4">Update Employee</h3>
+            <div th:replace="fragments/navbar :: topbar"></div>
 
-        <form th:action="@{/employees/save}" th:object="${employee}" method="post">
+            <div class="container-fluid">
 
-            <input type="hidden" th:field="*{id}"/>
+                <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                    <h1 class="h3 mb-0 text-gray-800">✏️ Update Employee</h1>
+                    <a href="/employees" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left mr-2"></i>Back
+                    </a>
+                </div>
 
-            <div class="mb-3">
-                <label class="form-label">Name</label>
-                <input type="text" th:field="*{name}" class="form-control" required>
+                <div class="card shadow mb-4">
+                    <div class="card-body">
+                        <form th:action="@{/employees/save}" th:object="${employee}" method="post">
+                            <input type="hidden" th:field="*{id}"/>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Full Name</label>
+                                        <input type="text" class="form-control" th:field="*{name}" required/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Email</label>
+                                        <input type="email" class="form-control" th:field="*{email}" required/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Department</label>
+                                        <input type="text" class="form-control" th:field="*{department}" required/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Basic Salary (₹)</label>
+                                        <input type="number" class="form-control" th:field="*{basicSalary}" required/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Overtime Hours</label>
+                                        <input type="number" class="form-control" th:field="*{overtimeHours}"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-warning">
+                                <i class="fas fa-save mr-2"></i>Update Employee
+                            </button>
+                            <a href="/employees" class="btn btn-secondary ml-2">Cancel</a>
+
+                        </form>
+                    </div>
+                </div>
+
             </div>
-
-            <div class="mb-3">
-                <label class="form-label">Email</label>
-                <input type="email" th:field="*{email}" class="form-control" required>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Department</label>
-                <input type="text" th:field="*{department}" class="form-control" required>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Basic Salary</label>
-                <input type="number" step="0.01" th:field="*{basicSalary}" class="form-control" required>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Overtime Hours</label>
-                <input type="number" th:field="*{overtimeHours}" class="form-control">
-            </div>
-
-            <!-- Buttons -->
-            <div class="d-flex gap-2 justify-content-center mt-4">
-                <button type="submit" class="btn btn-warning">Update</button>
-                <a th:href="@{/employees}" class="btn btn-secondary">← Back</a>
-            </div>
-
-        </form>
-
+        </div>
     </div>
-
 </div>
 
+<script src="/vendor/jquery/jquery.min.js"></script>
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+<script src="/js/sb-admin-2.min.js"></script>
 </body>
 </html>
