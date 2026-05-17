@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Payroll Settings</title>
+  <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,300,400,600,700,800,900" rel="stylesheet">
+  <link href="/css/sb-admin-2.min.css" rel="stylesheet">
+</head>
+<body id="page-top">
+<div id="wrapper">
+
+  <div th:replace="fragments/navbar :: sidebar"></div>
+
+  <div id="content-wrapper" class="d-flex flex-column">
+    <div id="content">
+
+      <div th:replace="fragments/navbar :: topbar"></div>
+
+      <div class="container-fluid">
+
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+          <h1 class="h3 mb-0 text-gray-800"> Payroll Settings</h1>
+        </div>
+
+        <div th:if="${param.success}" class="alert alert-success shadow-sm">
+          <i class="fas fa-check-circle mr-2"></i>Settings saved successfully!
+        </div>
+
+        <div class="card shadow mb-4">
+          <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Configure Tax & Deduction Percentages</h6>
+          </div>
+          <div class="card-body">
+            <form method="post" th:action="@{/payroll/config/save}">
+              <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label font-weight-bold">HRA (% of Basic Salary)</label>
+                <div class="col-sm-4">
+                  <input type="number" step="0.01" min="0" max="100" name="hra"
+                         class="form-control" th:value="${hra}" required/>
+                </div>
+                <div class="col-sm-5 col-form-label text-muted">
+                  <small>e.g. 40 means 40% of basic salary</small>
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label font-weight-bold">Allowances (% of Basic Salary)</label>
+                <div class="col-sm-4">
+                  <input type="number" step="0.01" min="0" max="100" name="allowances"
+                         class="form-control" th:value="${allowances}" required/>
+                </div>
+                <div class="col-sm-5 col-form-label text-muted">
+                  <small>e.g. 20 means 20% of basic salary</small>
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label font-weight-bold">PF (% of Basic Salary)</label>
+                <div class="col-sm-4">
+                  <input type="number" step="0.01" min="0" max="100" name="pf"
+                         class="form-control" th:value="${pf}" required/>
+                </div>
+                <div class="col-sm-5 col-form-label text-muted">
+                  <small>e.g. 12 means 12% of basic salary</small>
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label font-weight-bold">Tax (% of Gross Salary)</label>
+                <div class="col-sm-4">
+                  <input type="number" step="0.01" min="0" max="100" name="tax"
+                         class="form-control" th:value="${tax}" required/>
+                </div>
+                <div class="col-sm-5 col-form-label text-muted">
+                  <small>e.g. 10 means 10% of gross salary</small>
+                </div>
+              </div>
+
+              <hr>
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save mr-2"></i>Save Settings
+              </button>
+              <a th:href="@{/payroll}" class="btn btn-secondary ml-2">
+                <i class="fas fa-times mr-2"></i>Cancel
+              </a>
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/vendor/jquery/jquery.min.js"></script>
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+<script src="/js/sb-admin-2.min.js"></script>
+</body>
+</html>

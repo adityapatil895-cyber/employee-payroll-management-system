@@ -24,7 +24,7 @@
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
                     <h1 class="h3 mb-0 text-gray-800">✏️ Edit Attendance</h1>
 
-                    <!-- ✅ Back button fixed -->
+
                     <a th:href="@{/hr/attendance/employee/{id}(id=${employeeId})}"
                        class="btn btn-secondary">
                         ← Back
@@ -34,13 +34,13 @@
                 <div class="card shadow mb-4" style="max-width: 700px;">
                     <div class="card-body">
 
-                        <!-- ✅ Correct form -->
+
                         <form th:action="@{/attendance/edit/{id}(id=${attendance.id})}"
                               th:object="${attendance}"
                               method="post"
                               id="editForm">
 
-                            <!-- Employee -->
+
                             <div class="form-group">
                                 <label>Employee <span class="text-danger">*</span></label>
                                 <select id="employee" class="form-control" th:field="*{employee}" required>
@@ -51,14 +51,14 @@
                                 </select>
                             </div>
 
-                            <!-- Date -->
+
                             <div class="form-group">
                                 <label>Date <span class="text-danger">*</span></label>
                                 <input id="date" type="date" class="form-control"
                                        th:field="*{date}" required/>
                             </div>
 
-                            <!-- Time -->
+
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -74,7 +74,7 @@
                                 </div>
                             </div>
 
-                            <!-- Status -->
+
                             <div class="form-group">
                                 <label>Status <span class="text-danger">*</span></label>
                                 <select id="status" class="form-control" th:field="*{status}" required>
@@ -84,19 +84,19 @@
                                 </select>
                             </div>
 
-                            <!-- Remarks -->
+
                             <div class="form-group">
                                 <label>Remarks</label>
                                 <input type="text" class="form-control"
                                        th:field="*{remarks}" placeholder="Optional notes"/>
                             </div>
 
-                            <!-- Buttons -->
+
                             <button type="submit" class="btn btn-warning">
                                 <i class="fas fa-save mr-2"></i>Update
                             </button>
 
-                            <!-- ✅ Cancel fixed -->
+
                             <a th:href="@{/hr/attendance/employee/{id}(id=${employeeId})}"
                                class="btn btn-secondary ml-2">Cancel</a>
 
@@ -114,7 +114,7 @@
 <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
 <script src="/js/sb-admin-2.min.js"></script>
 
-<!-- ✅ FIXED VALIDATION SCRIPT -->
+
 <script>
     document.getElementById('editForm').addEventListener('submit', function(e) {
 

@@ -27,19 +27,18 @@ public class DashboardController {
     public String adminDashboard(Model model, Authentication auth) {
         model.addAttribute("username", auth.getName());
 
-        // Total employees
+
         long totalEmployees = employeeRepository.count();
         model.addAttribute("totalEmployees", totalEmployees);
 
-        // Total payroll
+
         double totalPayroll = employeeRepository.findAll()
                 .stream()
                 .mapToDouble(e -> e.getNetSalary())
                 .sum();
         model.addAttribute("totalPayroll", String.format("%.2f", totalPayroll));
 
-        // Monthly attendance count
-        // Check current month first
+
         long monthlyAttendance = attendanceRepository.findAll()
                 .stream()
                 .filter(a -> a.getDate() != null &&
@@ -47,7 +46,7 @@ public class DashboardController {
                         a.getDate().getYear() == LocalDate.now().getYear())
                 .count();
 
-        // If no data this month → count previous month
+
         if (monthlyAttendance == 0) {
             monthlyAttendance = attendanceRepository.findAll()
                     .stream()
@@ -66,7 +65,7 @@ public class DashboardController {
     public String hrDashboard(Model model, Authentication auth) {
         model.addAttribute("username", auth.getName());
 
-        // Present today count
+
         long presentToday = attendanceRepository.findAll()
                 .stream()
                 .filter(a -> a.getDate() != null &&
@@ -74,7 +73,7 @@ public class DashboardController {
                 .count();
         model.addAttribute("presentToday", presentToday);
 
-        // Employee list
+
         model.addAttribute("employees", employeeRepository.findAll());
 
         return "dashboard/hr";

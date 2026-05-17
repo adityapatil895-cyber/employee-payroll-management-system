@@ -1,5 +1,6 @@
 package com.payroll.payroll.controller;
 
+import com.payroll.payroll.service.PayrollConfigService;
 import com.payroll.payroll.model.Employee;
 import com.payroll.payroll.model.Role;
 import com.payroll.payroll.model.User;
@@ -18,6 +19,8 @@ import java.io.IOException;
 
 @Controller
 public class EmployeeController {
+    @Autowired
+    private PayrollConfigService payrollConfigService;
 
     @Autowired
     private EmployeeRepository employeeRepository;
@@ -51,15 +54,20 @@ public class EmployeeController {
 
         double basic = employee.getBasicSalary();
 
-        double hra = basic * 0.40;
-        double allowances = basic * 0.20;
-        double pf = basic * 0.12;
+        double hraRate = payrollConfigService.get("hra", 40.0) / 100;
+        double allowancesRate = payrollConfigService.get("allowances", 20.0) / 100;
+        double pfRate = payrollConfigService.get("pf", 12.0) / 100;
+        double taxRate = payrollConfigService.get("tax", 10.0) / 100;
+
+        double hra = basic * hraRate;
+        double allowances = basic * allowancesRate;
+        double pf = basic * pfRate;
 
         double hourlyRate = basic / 160;
         double overtimePay = employee.getOvertimeHours() * hourlyRate;
 
         double grossSalary = basic + hra + allowances + overtimePay;
-        double tax = grossSalary * 0.10;
+        double tax = grossSalary * taxRate;
         double netSalary = grossSalary - tax - pf;
 
         employee.setHra(hra);
@@ -98,11 +106,11 @@ public class EmployeeController {
     public String deleteEmployee(@PathVariable Long id) {
         Employee employee = employeeRepository.findById(id).orElseThrow();
 
-        // Step 1 → Delete all attendance records
+
         attendanceRepository.findByEmployee(employee)
                 .forEach(a -> attendanceRepository.delete(a));
 
-        // Step 2 → Delete linked user account
+
         userRepository.findAll().stream()
                 .filter(u -> u.getEmployee() != null &&
                         u.getEmployee().getId().equals(id))
@@ -112,7 +120,7 @@ public class EmployeeController {
                     userRepository.delete(u);
                 });
 
-        // Step 3 → Delete employee
+
         employeeRepository.deleteById(id);
 
         return "redirect:/employees";
@@ -126,10 +134,10 @@ public class EmployeeController {
         Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid employee Id: " + id));
 
-        // 🔒 Get logged-in user
+
         var user = userRepository.findByUsername(auth.getName()).orElseThrow();
 
-        // 🔒 Restrict employee to their own payslip
+
         if (user.getRole().name().equals("ROLE_EMPLOYEE")) {
             if (user.getEmployee() == null || !user.getEmployee().getId().equals(id)) {
                 response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied");

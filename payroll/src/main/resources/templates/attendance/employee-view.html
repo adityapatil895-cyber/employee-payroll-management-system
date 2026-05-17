@@ -22,7 +22,7 @@
 
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
                     <h1 class="h3 mb-0 text-gray-800">
-                        🕐 My Attendance —
+                         My Attendance —
                         <span th:text="${employee != null ? employee.name : 'Employee'}"></span>
                     </h1>
                     <span class="badge badge-primary p-2"
@@ -32,7 +32,7 @@
                 <div th:if="${errorMessage}"
                      class="alert alert-warning" th:text="${errorMessage}"></div>
 
-                <!-- Summary Cards -->
+
                 <div class="row mb-4" th:if="${!#lists.isEmpty(attendanceList)}">
                     <div class="col-md-3">
                         <div class="card border-left-success shadow py-2">
@@ -72,7 +72,7 @@
                     </div>
                 </div>
 
-                <!-- Attendance Table -->
+
                 <div class="card shadow mb-4">
                     <div class="card-body">
                         <div class="table-responsive">

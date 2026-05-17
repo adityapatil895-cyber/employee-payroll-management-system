@@ -23,11 +23,11 @@
 
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
           <h1 class="h3 mb-0 text-gray-800">
-            👤 Welcome, <span th:text="${employee != null ? employee.name : 'Employee'}"></span>
+             Welcome, <span th:text="${employee != null ? employee.name : 'Employee'}"></span>
           </h1>
         </div>
 
-        <!-- Message -->
+
         <div th:if="${message}" class="alert alert-info alert-dismissible fade show">
           <span th:text="${message}"></span>
           <button type="button" class="close" data-dismiss="alert">
@@ -35,7 +35,7 @@
           </button>
         </div>
 
-        <!-- Clock In / Out Cards -->
+
         <div class="row mb-4">
           <div class="col-md-6">
             <div class="card border-left-success shadow h-100 py-2">
@@ -73,7 +73,7 @@
           </div>
         </div>
 
-        <!-- Quick Links -->
+
         <div class="row">
           <div class="col-md-6 mb-4">
             <div class="card shadow">

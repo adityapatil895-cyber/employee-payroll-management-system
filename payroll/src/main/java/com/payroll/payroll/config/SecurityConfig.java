@@ -39,32 +39,32 @@ public class SecurityConfig {
                 .authenticationProvider(authProvider())
                 .authorizeHttpRequests(auth -> auth
 
-                        // Public
+
                         .requestMatchers("/login", "/css/**", "/js/**").permitAll()
 
-                        // Admin dashboard
+
                         .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
 
-                        // HR dashboard
+
                         .requestMatchers("/hr/dashboard").hasAuthority("ROLE_HR")
 
-                        // HR attendance
+
                         .requestMatchers("/hr/attendance/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_HR")
 
-                        // Employee routes
+
                         .requestMatchers("/employee/**").hasAuthority("ROLE_EMPLOYEE")
 
-                        // ✅ FIX: allow ALL roles for PDF (we will restrict in controller)
+
                         .requestMatchers("/employees/*/payslip")
                         .hasAnyAuthority("ROLE_ADMIN", "ROLE_HR", "ROLE_EMPLOYEE")
 
-                        // Employees management
+
                         .requestMatchers("/employees/**").hasAuthority("ROLE_ADMIN")
 
-                        // Payroll
+
                         .requestMatchers("/payroll/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_HR")
 
-                        // Attendance
+
                         .requestMatchers("/attendance/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_HR")
 
                         .anyRequest().authenticated()

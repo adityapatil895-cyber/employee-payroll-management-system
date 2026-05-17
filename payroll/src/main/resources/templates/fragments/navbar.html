@@ -3,11 +3,11 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <body>
 
-<!-- Sidebar Fragment -->
+
 <div th:fragment="sidebar">
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
-        <!-- Brand -->
+
         <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
             <div class="sidebar-brand-icon rotate-n-15">
                 <i class="fas fa-money-check-alt"></i>
@@ -17,7 +17,7 @@
 
         <hr class="sidebar-divider my-0">
 
-        <!-- Admin Links -->
+
         <div sec:authorize="hasAuthority('ROLE_ADMIN')">
             <li class="nav-item">
                 <a class="nav-link" href="/admin/dashboard">
@@ -44,9 +44,15 @@
                     <span>Payroll</span>
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/payroll/config">
+                    <i class="fas fa-fw fa-cogs"></i>
+                    <span>Payroll Settings</span>
+                </a>
+            </li>
         </div>
 
-        <!-- HR Links -->
+
         <div sec:authorize="hasAuthority('ROLE_HR')">
             <li class="nav-item">
                 <a class="nav-link" href="/hr/dashboard">
@@ -69,7 +75,7 @@
             </li>
         </div>
 
-        <!-- Employee Links -->
+
         <div sec:authorize="hasAuthority('ROLE_EMPLOYEE')">
             <li class="nav-item">
                 <a class="nav-link" href="/employee/dashboard">
@@ -94,7 +100,7 @@
 
         <hr class="sidebar-divider d-none d-md-block">
 
-        <!-- Logout -->
+
         <li class="nav-item">
             <form th:action="@{/logout}" method="post">
                 <button type="submit" class="btn nav-link text-white">
@@ -111,7 +117,7 @@
     </ul>
 </div>
 
-<!-- Topbar Fragment -->
+
 <div th:fragment="topbar">
     <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
         <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">

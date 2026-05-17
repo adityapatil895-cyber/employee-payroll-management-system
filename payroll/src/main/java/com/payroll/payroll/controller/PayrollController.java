@@ -20,7 +20,7 @@ public class PayrollController {
     @Autowired
     private UserRepository userRepository;
 
-    // Admin/HR view all payroll
+
     @GetMapping("/payroll")
     public String showPayroll(Model model) {
 
@@ -38,10 +38,9 @@ public class PayrollController {
         model.addAttribute("totalNetSalary", totalNetSalary);
         model.addAttribute("totalDeductions", totalDeductions);
 
-        return "payroll/list"; // ✅ matches your file path
+        return "payroll/list";
     }
 
-    // View one employee payslip detail
     @GetMapping("/payroll/detail/{id}")
     public String viewPayrollDetail(@PathVariable Long id, Model model, Authentication auth) {
         Employee employee = employeeRepository.findById(id).orElseThrow();
@@ -52,7 +51,7 @@ public class PayrollController {
         return "payroll/detail";
     }
 
-    // Employee views own payslip
+
     @GetMapping("/employee/payslip")
     public String viewOwnPayslip(Model model, Authentication auth) {
         var user = userRepository.findByUsername(auth.getName()).orElseThrow();
@@ -65,7 +64,7 @@ public class PayrollController {
 
         model.addAttribute("employee", user.getEmployee());
 
-        model.addAttribute("role", user.getRole().name()); // ✅ ADD
+        model.addAttribute("role", user.getRole().name());
 
         return "payroll/detail";
     }

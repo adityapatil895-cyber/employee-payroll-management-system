@@ -23,16 +23,16 @@ public class AttendanceController {
     @Autowired
     private UserRepository userRepository;
 
-    // ─── ADMIN & HR ───────────────────────────────────────────
 
-    // View all attendance (employee list)
+
+
     @GetMapping("/attendance")
     public String viewAll(Model model) {
         model.addAttribute("employees", attendanceService.getAllEmployees());
         return "attendance/list";
     }
 
-    // Show mark attendance form
+
     @GetMapping("/attendance/mark")
     public String showMarkForm(Model model) {
         model.addAttribute("attendance", new Attendance());
@@ -42,7 +42,7 @@ public class AttendanceController {
         return "attendance/mark";
     }
 
-    // Submit mark attendance
+
     @PostMapping("/attendance/mark")
     public String markAttendance(@ModelAttribute Attendance attendance, Model model) {
 
@@ -52,7 +52,7 @@ public class AttendanceController {
         return "redirect:/attendance";
     }
 
-    // Show edit form
+
     @GetMapping("/attendance/edit/{id}")
     public String showEditForm(@PathVariable Long id, Model model) {
         Attendance attendance = attendanceService.getAttendanceById(id);
@@ -61,13 +61,13 @@ public class AttendanceController {
         model.addAttribute("employees", attendanceService.getAllEmployees());
         model.addAttribute("statuses", AttendanceStatus.values());
 
-        // ✅ Important for back button
+
         model.addAttribute("employeeId", attendance.getEmployee().getId());
 
         return "attendance/edit";
     }
 
-    // ✅ FIXED: Submit edit form (THIS WAS MISSING)
+
     @PostMapping("/attendance/edit/{id}")
     public String updateAttendance(@PathVariable Long id,
                                    @ModelAttribute Attendance attendance) {
@@ -77,18 +77,18 @@ public class AttendanceController {
 
         Long employeeId = attendance.getEmployee().getId();
 
-        // ✅ Redirect back to same employee
+
         return "redirect:/hr/attendance/employee/" + employeeId;
     }
 
-    // Delete attendance
+
     @GetMapping("/attendance/delete/{id}")
     public String deleteAttendance(@PathVariable Long id) {
         attendanceService.deleteAttendance(id);
         return "redirect:/attendance";
     }
 
-    // Filter by date
+
     @GetMapping("/attendance/filter")
     public String filterByDate(
             @RequestParam(required = false)
@@ -105,7 +105,7 @@ public class AttendanceController {
         return "attendance/list";
     }
 
-    // HR views monthly attendance of ALL employees
+
     @GetMapping("/hr/attendance/monthly")
     public String hrMonthlyAttendance(Model model) {
         model.addAttribute("attendanceList", attendanceService.getAllMonthlyAttendance());
@@ -114,9 +114,7 @@ public class AttendanceController {
         return "attendance/hr-monthly";
     }
 
-    // ─── EMPLOYEE ─────────────────────────────────────────────
 
-    // Employee views OWN monthly attendance
     @GetMapping("/employee/attendance")
     public String employeeViewAttendance(Model model, Authentication auth) {
 
@@ -139,7 +137,7 @@ public class AttendanceController {
         return "attendance/employee-view";
     }
 
-    // Employee Clock In
+
     @PostMapping("/employee/clockin")
     public String clockIn(Authentication auth, Model model) {
 
@@ -159,7 +157,7 @@ public class AttendanceController {
         return "dashboard/employee";
     }
 
-    // Employee Clock Out
+
     @PostMapping("/employee/clockout")
     public String clockOut(Authentication auth, Model model) {
 
@@ -179,7 +177,7 @@ public class AttendanceController {
         return "dashboard/employee";
     }
 
-    // HR views ONE employee monthly attendance
+
     @GetMapping("/hr/attendance/employee/{id}")
     public String hrViewEmployeeAttendance(@PathVariable Long id, Model model) {
 

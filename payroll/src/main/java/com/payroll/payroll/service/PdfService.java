@@ -16,25 +16,24 @@ public class PdfService {
     public void generatePayslip(Employee employee, HttpServletResponse response) throws IOException {
 
         try {
-            // ✅ Safe filename (no spaces)
+
             String fileName = "payslip_" + employee.getName().replaceAll(" ", "_") + ".pdf";
 
-            // ✅ Set response headers
+
             response.setContentType("application/pdf");
             response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
 
-            // ✅ Create document
             Document document = new Document(PageSize.A4);
             PdfWriter.getInstance(document, response.getOutputStream());
             document.open();
 
-            // ── Fonts ──────────────────────────────────────────
+
             Font titleFont   = new Font(Font.HELVETICA, 18, Font.BOLD, Color.WHITE);
             Font headingFont = new Font(Font.HELVETICA, 12, Font.BOLD);
             Font normalFont  = new Font(Font.HELVETICA, 11, Font.NORMAL);
             Font boldFont    = new Font(Font.HELVETICA, 11, Font.BOLD);
 
-            // ── Company Header ─────────────────────────────────
+
             PdfPTable headerTable = new PdfPTable(1);
             headerTable.setWidthPercentage(100);
 
@@ -56,7 +55,6 @@ public class PdfService {
             document.add(headerTable);
             document.add(Chunk.NEWLINE);
 
-            // ── Employee Details ───────────────────────────────
             PdfPTable empTable = new PdfPTable(2);
             empTable.setWidthPercentage(100);
             empTable.setSpacingBefore(10);
@@ -70,7 +68,7 @@ public class PdfService {
             document.add(empTable);
             document.add(Chunk.NEWLINE);
 
-            // ── Earnings Table ─────────────────────────────────
+
             Paragraph earningsTitle = new Paragraph("Earnings", headingFont);
             earningsTitle.setSpacingBefore(10);
             document.add(earningsTitle);
@@ -98,7 +96,7 @@ public class PdfService {
             document.add(earningsTable);
             document.add(Chunk.NEWLINE);
 
-            // ── Deductions Table ───────────────────────────────
+
             Paragraph deductionsTitle = new Paragraph("Deductions", headingFont);
             deductionsTitle.setSpacingBefore(10);
             document.add(deductionsTitle);
@@ -124,7 +122,7 @@ public class PdfService {
             document.add(deductionsTable);
             document.add(Chunk.NEWLINE);
 
-            // ── Net Salary ─────────────────────────────────────
+
             PdfPTable netTable = new PdfPTable(2);
             netTable.setWidthPercentage(100);
             netTable.setSpacingBefore(10);
@@ -146,10 +144,10 @@ public class PdfService {
 
             document.add(netTable);
 
-            // ✅ Close document
+
             document.close();
 
-            // ✅ Flush response
+
             response.flushBuffer();
 
         } catch (Exception e) {
@@ -157,7 +155,7 @@ public class PdfService {
         }
     }
 
-    // Helper method
+
     private void addTableRow(PdfPTable table, String label, String value, Font boldFont, Font normalFont) {
         PdfPCell labelCell = new PdfPCell(new Phrase(label, boldFont));
         labelCell.setPadding(8);
